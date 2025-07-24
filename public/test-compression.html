@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compression Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        input[type="file"] {
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .test-btn { background: #007bff; color: white; }
+        .test-btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Compression Test Page</h1>
+    <p>This page tests the new Canvas-based and WebCodecs-based compression implementations.</p>
+
+    <div class="test-section">
+        <h2>🖼️ Image Compression Test</h2>
+        <input type="file" id="imageFile" accept="image/*">
+        <button class="test-btn" onclick="testImageCompression()">Test Canvas Compression</button>
+        <div id="imageResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎬 Video Compression Test</h2>
+        <input type="file" id="videoFile" accept="video/*">
+        <button class="test-btn" onclick="testVideoCompression()">Test WebCodecs Compression</button>
+        <div id="videoResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Browser Compatibility</h2>
+        <button class="test-btn" onclick="checkCompatibility()">Check Compatibility</button>
+        <div id="compatResult" class="result"></div>
+    </div>
+
+    <script>
+        // Test Canvas-based image compression
+        async function testImageCompression() {
+            const fileInput = document.getElementById('imageFile');
+            const resultDiv = document.getElementById('imageResult');
+            
+            if (!fileInput.files[0]) {
+                resultDiv.innerHTML = '<span class="error">Please select an image file first</span>';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            resultDiv.innerHTML = 'Testing Canvas compression...';
+
+            try {
+                // Test Canvas API availability
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                if (!ctx) {
+                    throw new Error('Canvas context not available');
+                }
+
+                // Create image and test compression
+                const img = new Image();
+                
+                img.onload = function() {
+                    // Set canvas size (reduce by 20% for testing)
+                    canvas.width = Math.round(img.width * 0.8);
+                    canvas.height = Math.round(img.height * 0.8);
+                    
+                    // Draw image
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    // Convert to blob with 70% quality
+                    canvas.toBlob(function(blob) {
+                        if (blob) {
+                            const originalSize = (file.size / 1024 / 1024).toFixed(2);
+                            const compressedSize = (blob.size / 1024 / 1024).toFixed(2);
+                            const reduction = (((file.size - blob.size) / file.size) * 100).toFixed(1);
+                            
+                            resultDiv.innerHTML = `
+                                <div class="success">
+                                    ✅ Canvas compression successful!<br>
+                                    📊 Original: ${originalSize} MB<br>
+                                    📊 Compressed: ${compressedSize} MB<br>
+                                    📊 Reduction: ${reduction}%<br>
+                                    📐 Dimensions: ${img.width}x${img.height} → ${canvas.width}x${canvas.height}
+                                </div>
+                            `;
+                        } else {
+                            resultDiv.innerHTML = '<span class="error">❌ Failed to create compressed blob</span>';
+                        }
+                    }, 'image/jpeg', 0.7);
+                };
+                
+                img.onerror = function() {
+                    resultDiv.innerHTML = '<span class="error">❌ Failed to load image</span>';
+                };
+                
+                img.src = URL.createObjectURL(file);
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Canvas compression failed: ${error.message}</span>`;
+            }
+        }
+
+        // Test WebCodecs-based video compression
+        async function testVideoCompression() {
+            const fileInput = document.getElementById('videoFile');
+            const resultDiv = document.getElementById('videoResult');
+            
+            if (!fileInput.files[0]) {
+                resultDiv.innerHTML = '<span class="error">Please select a video file first</span>';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            resultDiv.innerHTML = 'Testing video compression capabilities...';
+
+            try {
+                // Check MediaRecorder support
+                if (!('MediaRecorder' in window)) {
+                    throw new Error('MediaRecorder not supported');
+                }
+
+                // Check Canvas capture support
+                const canvas = document.createElement('canvas');
+                if (!canvas.captureStream) {
+                    throw new Error('Canvas.captureStream not supported');
+                }
+
+                // Test video loading
+                const video = document.createElement('video');
+                
+                video.onloadedmetadata = function() {
+                    const originalSize = (file.size / 1024 / 1024).toFixed(2);
+                    
+                    // Test MediaRecorder with different codecs
+                    const codecs = [
+                        'video/webm;codecs=vp9',
+                        'video/webm;codecs=vp8',
+                        'video/mp4;codecs=avc1.42E01E'
+                    ];
+                    
+                    let supportedCodecs = [];
+                    codecs.forEach(codec => {
+                        if (MediaRecorder.isTypeSupported(codec)) {
+                            supportedCodecs.push(codec);
+                        }
+                    });
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ Video compression capabilities verified!<br>
+                            📊 Original file: ${originalSize} MB<br>
+                            📐 Dimensions: ${video.videoWidth}x${video.videoHeight}<br>
+                            ⏱️ Duration: ${video.duration.toFixed(1)}s<br>
+                            🎥 Supported codecs: ${supportedCodecs.length > 0 ? supportedCodecs.join(', ') : 'None'}<br>
+                            ${supportedCodecs.length > 0 ? '✅ Video compression should work!' : '❌ No supported codecs found'}
+                        </div>
+                    `;
+                };
+                
+                video.onerror = function() {
+                    resultDiv.innerHTML = '<span class="error">❌ Failed to load video file</span>';
+                };
+                
+                video.src = URL.createObjectURL(file);
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Video compression test failed: ${error.message}</span>`;
+            }
+        }
+
+        // Check browser compatibility
+        function checkCompatibility() {
+            const resultDiv = document.getElementById('compatResult');
+            
+            const checks = [
+                { name: 'Canvas API', test: () => !!document.createElement('canvas').getContext },
+                { name: 'Canvas.toBlob', test: () => !!document.createElement('canvas').toBlob },
+                { name: 'MediaRecorder', test: () => 'MediaRecorder' in window },
+                { name: 'Canvas.captureStream', test: () => !!document.createElement('canvas').captureStream },
+                { name: 'SharedArrayBuffer', test: () => typeof SharedArrayBuffer !== 'undefined' },
+                { name: 'VideoEncoder', test: () => 'VideoEncoder' in window },
+                { name: 'VideoDecoder', test: () => 'VideoDecoder' in window },
+                { name: 'createImageBitmap', test: () => 'createImageBitmap' in window }
+            ];
+            
+            let results = '<h3>Browser Compatibility Results:</h3>';
+            let allGood = true;
+            
+            checks.forEach(check => {
+                const supported = check.test();
+                results += `<div>${supported ? '✅' : '❌'} ${check.name}: ${supported ? 'Supported' : 'Not supported'}</div>`;
+                if (!supported && ['Canvas API', 'Canvas.toBlob', 'MediaRecorder'].includes(check.name)) {
+                    allGood = false;
+                }
+            });
+            
+            results += `<br><strong>${allGood ? '✅ All essential features supported!' : '⚠️ Some features may not work'}</strong>`;
+            
+            resultDiv.innerHTML = results;
+        }
+
+        // Auto-check compatibility on load
+        window.onload = function() {
+            checkCompatibility();
+        };
+    </script>
+</body>
+</html>

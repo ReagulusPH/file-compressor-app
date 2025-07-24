@@ -1,0 +1,12 @@
+node_modules/
+build/
+dist/
+coverage/
+*.min.js
+*.worker.js
+public/
+package-lock.json
+yarn.lock
+.git/
+.vscode/
+.idea/

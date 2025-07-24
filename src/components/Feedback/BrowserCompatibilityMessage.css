@@ -1,0 +1,111 @@
+.browser-compatibility-message {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-top: 4px solid #3498db;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  animation: slide-up 0.3s ease-out;
+}
+
+.browser-compatibility-message.warning {
+  border-top-color: #f39c12;
+}
+
+.browser-compatibility-message.error {
+  border-top-color: #e74c3c;
+}
+
+.message-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+}
+
+.message-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.message-text {
+  flex: 1;
+}
+
+.message-title {
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.message-body {
+  margin: 0 0 0.5rem;
+  color: #555;
+}
+
+.browser-info {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.dismiss-button {
+  background: none;
+  border: none;
+  color: #777;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dismiss-button:hover {
+  color: #333;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 575.98px) {
+  .browser-compatibility-message {
+    padding: 0.75rem;
+  }
+
+  .message-content {
+    gap: 0.75rem;
+  }
+
+  .message-icon {
+    font-size: 1.25rem;
+  }
+
+  .message-title {
+    font-size: 0.95rem;
+  }
+
+  .message-body {
+    font-size: 0.9rem;
+  }
+
+  .browser-info {
+    font-size: 0.8rem;
+  }
+}

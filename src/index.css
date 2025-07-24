@@ -1,0 +1,61 @@
+/* Import theme variables */
+@import './styles/themes.css';
+
+/* Base styles with responsive considerations */
+html {
+  box-sizing: border-box;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+/* Responsive typography */
+@media (max-width: 575.98px) {
+  html {
+    font-size: 14px; /* Slightly smaller base font size on mobile */
+  }
+}
+
+/* Responsive images */
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Improve touch targets for mobile */
+button,
+input,
+select,
+textarea,
+[role='button'] {
+  touch-action: manipulation; /* Remove delay on mobile devices */
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Viewport height fix for mobile browsers */
+.vh-fix {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}

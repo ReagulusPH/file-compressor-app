@@ -1,0 +1,239 @@
+.compatibility-warning {
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-left: 4px solid;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.compatibility-warning--error {
+  border-left-color: var(--color-error, #dc3545);
+  background-color: var(--color-error-bg, #f8d7da);
+}
+
+.compatibility-warning--warning {
+  border-left-color: var(--color-warning, #ffc107);
+  background-color: var(--color-warning-bg, #fff3cd);
+}
+
+.compatibility-warning--info {
+  border-left-color: var(--color-info, #17a2b8);
+  background-color: var(--color-info-bg, #d1ecf1);
+}
+
+.compatibility-warning__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.compatibility-warning__icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.compatibility-warning__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  flex-grow: 1;
+}
+
+.compatibility-warning--error .compatibility-warning__title {
+  color: var(--color-error-text, #721c24);
+}
+
+.compatibility-warning--warning .compatibility-warning__title {
+  color: var(--color-warning-text, #856404);
+}
+
+.compatibility-warning--info .compatibility-warning__title {
+  color: var(--color-info-text, #0c5460);
+}
+
+.compatibility-warning__dismiss {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  color: var(--color-text-secondary);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.compatibility-warning__dismiss:hover {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.compatibility-warning__content {
+  line-height: 1.5;
+}
+
+.compatibility-warning__message-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.compatibility-warning__format-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.compatibility-warning__message {
+  margin: 0;
+  color: var(--color-text);
+  flex-grow: 1;
+}
+
+.compatibility-warning--error .compatibility-warning__message {
+  color: var(--color-error-text, #721c24);
+}
+
+.compatibility-warning--warning .compatibility-warning__message {
+  color: var(--color-warning-text, #856404);
+}
+
+.compatibility-warning--info .compatibility-warning__message {
+  color: var(--color-info-text, #0c5460);
+}
+
+.compatibility-warning__suggestions {
+  margin-top: 1rem;
+}
+
+.compatibility-warning__suggestions-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.compatibility-warning--error .compatibility-warning__suggestions-title {
+  color: var(--color-error-text, #721c24);
+}
+
+.compatibility-warning--warning .compatibility-warning__suggestions-title {
+  color: var(--color-warning-text, #856404);
+}
+
+.compatibility-warning--info .compatibility-warning__suggestions-title {
+  color: var(--color-info-text, #0c5460);
+}
+
+.compatibility-warning__suggestions-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  list-style-type: disc;
+}
+
+.compatibility-warning__suggestion {
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.compatibility-warning--error .compatibility-warning__suggestion {
+  color: var(--color-error-text, #721c24);
+}
+
+.compatibility-warning--warning .compatibility-warning__suggestion {
+  color: var(--color-warning-text, #856404);
+}
+
+.compatibility-warning--info .compatibility-warning__suggestion {
+  color: var(--color-info-text, #0c5460);
+}
+
+/* Fallback methods section */
+.compatibility-warning__fallback-methods {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background-color: var(--color-background);
+  border-radius: 4px;
+  border: 1px solid var(--color-border, #e0e0e0);
+}
+
+.compatibility-warning__fallback-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.compatibility-warning__fallback-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  list-style-type: circle;
+}
+
+.compatibility-warning__fallback-method {
+  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-family: monospace;
+}
+
+/* Technical details section */
+.compatibility-warning__technical-details {
+  margin-top: 1rem;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 4px;
+}
+
+.compatibility-warning__technical-summary {
+  padding: 0.5rem 0.75rem;
+  background-color: var(--color-background);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border-radius: 4px 4px 0 0;
+}
+
+.compatibility-warning__technical-summary:hover {
+  background-color: var(--color-surface);
+}
+
+.compatibility-warning__technical-content {
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.compatibility-warning__technical-content p {
+  margin: 0.25rem 0;
+  color: var(--color-text-secondary);
+}
+
+.compatibility-warning__technical-content strong {
+  color: var(--color-text);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .compatibility-warning {
+    padding: 0.75rem;
+    margin: 0.75rem 0;
+  }
+
+  .compatibility-warning__header {
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .compatibility-warning__title {
+    font-size: 0.9rem;
+  }
+
+  .compatibility-warning__message,
+  .compatibility-warning__suggestion {
+    font-size: 0.85rem;
+  }
+}

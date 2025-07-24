@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SharedArrayBuffer Test</title>
+</head>
+<body>
+    <h1>SharedArrayBuffer Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        const resultDiv = document.getElementById('result');
+        
+        if (typeof SharedArrayBuffer !== 'undefined') {
+            resultDiv.innerHTML = '<p style="color: green;">✅ SharedArrayBuffer is available!</p>';
+            console.log('SharedArrayBuffer is supported');
+            
+            // Test creating a SharedArrayBuffer
+            try {
+                const sab = new SharedArrayBuffer(1024);
+                resultDiv.innerHTML += '<p style="color: green;">✅ SharedArrayBuffer can be created!</p>';
+                console.log('SharedArrayBuffer created successfully:', sab);
+            } catch (error) {
+                resultDiv.innerHTML += '<p style="color: red;">❌ Error creating SharedArrayBuffer: ' + error.message + '</p>';
+                console.error('Error creating SharedArrayBuffer:', error);
+            }
+        } else {
+            resultDiv.innerHTML = '<p style="color: red;">❌ SharedArrayBuffer is not available</p>';
+            console.error('SharedArrayBuffer is not supported');
+        }
+        
+        // Also test if we can load FFmpeg
+        console.log('Testing FFmpeg import...');
+        import('https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js')
+            .then(() => {
+                resultDiv.innerHTML += '<p style="color: green;">✅ FFmpeg can be imported!</p>';
+                console.log('FFmpeg imported successfully');
+            })
+            .catch(error => {
+                resultDiv.innerHTML += '<p style="color: red;">❌ Error importing FFmpeg: ' + error.message + '</p>';
+                console.error('Error importing FFmpeg:', error);
+            });
+    </script>
+</body>
+</html>

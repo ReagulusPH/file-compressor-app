@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  file-compressor:
+    build: .
+    container_name: file-compressor-app
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
