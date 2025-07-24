@@ -3,7 +3,7 @@
  * PDF compression and optimization using pdf-lib
  */
 
-import { PDFDocument, PDFPage, PDFImage } from 'pdf-lib';
+import { PDFDocument, PDFPage, PDFImage, PDFName } from 'pdf-lib';
 import { DocumentSettings, FormatMetadata } from '../../types';
 import { CompressionError, MemoryError } from '../../utils/errors/ErrorTypes';
 import MemoryManager from '../../utils/memory/MemoryManager';
@@ -163,8 +163,8 @@ export class PDFCompressor extends DocumentProcessor {
         // Simple check for embedded images by looking at page resources
         for (const page of pages.slice(0, 5)) {
           // Check first 5 pages only for performance
-          const resources = page.node.Resources;
-          if (resources && resources.XObject) {
+          const resources = page.node.Resources();
+          if (resources && resources.get(PDFName.of('XObject'))) {
             hasEmbeddedMedia = true;
             break;
           }

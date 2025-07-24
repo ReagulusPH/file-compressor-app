@@ -11,8 +11,8 @@ import FormatDetector from './FormatDetector';
 import CanvasImageCompressor from './ImageCompressor/CanvasImageCompressor';
 import WebCodecsVideoCompressor from './VideoCompressor/WebCodecsVideoCompressor';
 import AudioCompressor from './AudioCompressor/AudioCompressor';
-import PDFCompressor from './DocumentCompressor/PDFCompressor';
-import OfficeCompressor from './DocumentCompressor/OfficeCompressor';
+import { PDFCompressor } from './DocumentCompressor/PDFCompressor';
+import { OfficeCompressor } from './DocumentCompressor/OfficeCompressor';
 import APKCompressor from './ArchiveCompressor/APKCompressor';
 
 // Fallback compressors (library-based)
@@ -158,14 +158,14 @@ export class CompressionService implements CompressionServiceInterface {
     this.compressionStrategies.set('document', {
       method: 'library', // Documents primarily use libraries
       compressor: {
-        pdf: PDFCompressor,
-        office: OfficeCompressor,
+        pdf: new PDFCompressor(),
+        office: new OfficeCompressor(),
       },
       fallback: {
         method: 'basic',
         compressor: {
-          pdf: PDFCompressor, // Basic PDF compression
-          office: OfficeCompressor, // Basic office compression
+          pdf: new PDFCompressor(), // Basic PDF compression
+          office: new OfficeCompressor(), // Basic office compression
         }
       }
     });
@@ -783,16 +783,22 @@ export class CompressionService implements CompressionServiceInterface {
       }
 
       // Cancel document compression
-      if (typeof PDFCompressor.cancelCompression === 'function') {
+      try {
         PDFCompressor.cancelCompression();
+      } catch (error) {
+        console.warn('Failed to cancel PDF compression:', error);
       }
-      if (typeof OfficeCompressor.cancelCompression === 'function') {
+      try {
         OfficeCompressor.cancelCompression();
+      } catch (error) {
+        console.warn('Failed to cancel Office compression:', error);
       }
 
       // Cancel archive compression
-      if (typeof APKCompressor.cancelCompression === 'function') {
+      try {
         APKCompressor.cancelCompression();
+      } catch (error) {
+        console.warn('Failed to cancel APK compression:', error);
       }
 
       // Note: Image compression (Canvas-based) typically doesn't need cancellation

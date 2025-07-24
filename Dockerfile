@@ -6,7 +6,7 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-RUN npm run build:safe
+RUN npm run build:docker
 
 # Production stage
 FROM nginx:alpine

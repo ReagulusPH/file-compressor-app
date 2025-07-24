@@ -2,7 +2,7 @@
  * Tests for PDFCompressor service
  */
 
-import PDFCompressor from './PDFCompressor';
+import { PDFCompressor } from './PDFCompressor';
 import { DocumentSettings } from '../../types';
 import MemoryManager from '../../utils/memory/MemoryManager';
 import { CompressionError } from '../../utils/errors/ErrorTypes';
@@ -66,9 +66,10 @@ describe('PDFCompressor', () => {
 
   describe('compressDocument', () => {
     it('should compress a PDF document successfully', async () => {
+      const pdfCompressor = new PDFCompressor();
       const onProgress = jest.fn();
       
-      const result = await PDFCompressor.compressDocument(mockFile, mockSettings, onProgress);
+      const result = await pdfCompressor.compressDocument(mockFile, mockSettings, onProgress);
       
       expect(result).toBeDefined();
       expect(result.compressedBlob).toBeInstanceOf(Blob);
@@ -87,7 +88,8 @@ describe('PDFCompressor', () => {
         optimizeImages: true,
       };
       
-      const result = await PDFCompressor.compressDocument(mockFile, highSettings);
+      const pdfCompressor = new PDFCompressor();
+      const result = await pdfCompressor.compressDocument(mockFile, highSettings);
       
       expect(result).toBeDefined();
       expect(mockPDFDoc.setTitle).toHaveBeenCalledWith('');
@@ -101,50 +103,53 @@ describe('PDFCompressor', () => {
         optimizeImages: false,
       };
       
-      await PDFCompressor.compressDocument(mockFile, preserveSettings);
+      const pdfCompressor = new PDFCompressor();
+      await pdfCompressor.compressDocument(mockFile, preserveSettings);
       
       expect(mockPDFDoc.setTitle).not.toHaveBeenCalled();
     });
 
     it('should handle cancellation during processing', async () => {
+      const pdfCompressor = new PDFCompressor();
       // Cancel processing after a short delay
       setTimeout(() => {
-        PDFCompressor.cancelProcessing();
+        pdfCompressor.cancelProcessing();
       }, 10);
       
       await expect(
-        PDFCompressor.compressDocument(mockFile, mockSettings)
+        pdfCompressor.compressDocument(mockFile, mockSettings)
       ).rejects.toThrow('PDF compression was cancelled');
     });
 
     it('should handle PDF loading errors', async () => {
       mockPDFDocument.load.mockRejectedValue(new Error('Invalid PDF'));
-      
+      const pdfCompressor = new PDFCompressor();
       await expect(
-        PDFCompressor.compressDocument(mockFile, mockSettings)
+        pdfCompressor.compressDocument(mockFile, mockSettings)
       ).rejects.toThrow('PDF compression failed');
     });
 
     it('should handle memory errors', async () => {
       (MemoryManager.checkMemory as jest.Mock).mockReturnValue(false);
-      
+      const pdfCompressor = new PDFCompressor();
       await expect(
-        PDFCompressor.compressDocument(mockFile, mockSettings)
+        pdfCompressor.compressDocument(mockFile, mockSettings)
       ).rejects.toThrow('Invalid PDF document');
     });
 
     it('should handle save errors', async () => {
       mockPDFDoc.save.mockRejectedValue(new Error('Save failed'));
-      
+      const pdfCompressor = new PDFCompressor();
       await expect(
-        PDFCompressor.compressDocument(mockFile, mockSettings)
+        pdfCompressor.compressDocument(mockFile, mockSettings)
       ).rejects.toThrow('PDF compression failed');
     });
   });
 
   describe('extractMetadata', () => {
     it('should extract metadata from PDF', async () => {
-      const metadata = await PDFCompressor.extractMetadata(mockFile);
+      const pdfCompressor = new PDFCompressor();
+      const metadata = await pdfCompressor.extractMetadata(mockFile);
       
       expect(metadata).toBeDefined();
       expect(metadata.pageCount).toBe(2);
@@ -154,8 +159,8 @@ describe('PDFCompressor', () => {
 
     it('should handle PDF loading errors during metadata extraction', async () => {
       mockPDFDocument.load.mockRejectedValue(new Error('Invalid PDF'));
-      
-      const metadata = await PDFCompressor.extractMetadata(mockFile);
+      const pdfCompressor = new PDFCompressor();
+      const metadata = await pdfCompressor.extractMetadata(mockFile);
       
       expect(metadata.pageCount).toBe(0);
       expect(metadata.hasEmbeddedMedia).toBe(false);
@@ -166,16 +171,16 @@ describe('PDFCompressor', () => {
       mockPDFDoc.getPages.mockImplementation(() => {
         throw new Error('Encrypted PDF');
       });
-      
-      const metadata = await PDFCompressor.extractMetadata(mockFile);
+      const pdfCompressor = new PDFCompressor();
+      const metadata = await pdfCompressor.extractMetadata(mockFile);
       
       expect(metadata.isEncrypted).toBe(true);
     });
 
     it('should handle file.arrayBuffer errors', async () => {
       mockFile.arrayBuffer = jest.fn().mockRejectedValue(new Error('File read error'));
-      
-      const metadata = await PDFCompressor.extractMetadata(mockFile);
+      const pdfCompressor = new PDFCompressor();
+      const metadata = await pdfCompressor.extractMetadata(mockFile);
       
       expect(metadata.pageCount).toBe(0);
       expect(metadata.isEncrypted).toBe(false);
@@ -244,11 +249,13 @@ describe('PDFCompressor', () => {
 
   describe('processing state management', () => {
     it('should handle processing state correctly', () => {
-      expect(PDFCompressor.isProcessingActive()).toBe(false);
+      const pdfCompressor = new PDFCompressor();
+      expect(pdfCompressor.isProcessingActive()).toBe(false);
     });
 
     it('should handle cancellation', () => {
-      PDFCompressor.cancelProcessing();
+      const pdfCompressor = new PDFCompressor();
+      pdfCompressor.cancelProcessing();
       // The cancellation flag should be set internally
     });
   });
@@ -266,13 +273,15 @@ describe('PDFCompressor', () => {
       };
       
       // Should not throw, but log warning
-      const result = await PDFCompressor.compressDocument(mockFile, settings);
+      const pdfCompressor = new PDFCompressor();
+      const result = await pdfCompressor.compressDocument(mockFile, settings);
       expect(result).toBeDefined();
     });
 
     it('should handle page optimization errors gracefully', async () => {
       // This test ensures that page optimization errors don't break the entire process
-      const result = await PDFCompressor.compressDocument(mockFile, mockSettings);
+      const pdfCompressor = new PDFCompressor();
+      const result = await pdfCompressor.compressDocument(mockFile, mockSettings);
       expect(result).toBeDefined();
     });
   });

@@ -2,7 +2,7 @@
  * Performance tests for multi-format compression with large files
  */
 
-import PDFCompressor from '../../services/DocumentCompressor/PDFCompressor';
+import { PDFCompressor } from '../../services/DocumentCompressor/PDFCompressor';
 import { OfficeCompressor } from '../../services/DocumentCompressor/OfficeCompressor';
 import { AudioCompressor } from '../../services/AudioCompressor/AudioCompressor';
 import APKCompressor from '../../services/ArchiveCompressor/APKCompressor';
@@ -134,7 +134,8 @@ describe('Multi-Format Performance Tests', () => {
 
         performanceMeasurer.start();
         
-        const result = await PDFCompressor.compressDocument(file, settings);
+        const pdfCompressor = new PDFCompressor();
+        const result = await pdfCompressor.compressDocument(file, settings);
         
         const metrics = performanceMeasurer.end();
 
@@ -167,7 +168,8 @@ describe('Multi-Format Performance Tests', () => {
       };
 
       // Should handle memory pressure gracefully
-      await expect(PDFCompressor.compressDocument(largeFile, settings))
+      const pdfCompressor = new PDFCompressor();
+      await expect(pdfCompressor.compressDocument(largeFile, settings))
         .resolves.toBeDefined();
     });
   });
@@ -383,8 +385,9 @@ describe('Multi-Format Performance Tests', () => {
       performanceMeasurer.start();
 
       // Process files concurrently
+      const pdfCompressor = new PDFCompressor();
       const results = await Promise.all([
-        PDFCompressor.compressDocument(files[0], { compressionLevel: 'medium', preserveMetadata: true, optimizeImages: true }),
+        pdfCompressor.compressDocument(files[0], { compressionLevel: 'medium', preserveMetadata: true, optimizeImages: true }),
         new AudioCompressor().compressAudio(files[1], { quality: 70, outputFormat: 'mp3' }),
         APKCompressor.compressAPK(files[2], { compressionLevel: 6, preserveStructure: true, validateIntegrity: true }),
       ]);
@@ -423,7 +426,8 @@ describe('Multi-Format Performance Tests', () => {
       const results = [];
       for (const file of largeFiles) {
         if (memoryManager.checkMemory()) {
-          const result = await PDFCompressor.compressDocument(file, { 
+          const pdfCompressor = new PDFCompressor();
+          const result = await pdfCompressor.compressDocument(file, { 
             compressionLevel: 'low', 
             preserveMetadata: false, 
             optimizeImages: false 
@@ -468,7 +472,8 @@ describe('Multi-Format Performance Tests', () => {
         let result;
         switch (testCase.format) {
           case 'PDF':
-            result = await PDFCompressor.compressDocument(file, { compressionLevel: 'medium', preserveMetadata: true, optimizeImages: true });
+            const pdfCompressor = new PDFCompressor();
+            result = await pdfCompressor.compressDocument(file, { compressionLevel: 'medium', preserveMetadata: true, optimizeImages: true });
             break;
           case 'DOCX':
             result = await new OfficeCompressor().compressDocument(file, { compressionLevel: 'medium', preserveMetadata: true, optimizeImages: true });
