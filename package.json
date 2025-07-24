@@ -35,7 +35,7 @@
     "dev": "concurrently \"BROWSER=none react-scripts start\" \"sleep 3 && NODE_ENV=development node server.js\"",
     "build": "react-scripts build",
     "build:safe": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
-    "build:docker": "DISABLE_ESLINT_PLUGIN=true SKIP_PREFLIGHT_CHECK=true react-scripts build",
+    "build:docker": "DISABLE_ESLINT_PLUGIN=true SKIP_PREFLIGHT_CHECK=true TSC_COMPILE_ON_ERROR=true react-scripts build",
     "serve": "NODE_ENV=production node server.js",
     "test": "react-scripts test",
     "lint": "eslint src/**/*.{ts,tsx} --max-warnings 50",

@@ -1,0 +1,19 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+README.md
+.env
+.nyc_output
+coverage
+.coverage
+.coverage.*
+junit.xml
+test-results.xml
+
+# Exclude test files to prevent build issues
+src/tests/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx

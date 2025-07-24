@@ -195,7 +195,14 @@ describe.skip('Multi-Format Browser Compatibility Tests', () => {
       });
       
       const service = new BrowserCompatibilityService();
-      const report = service.getCompatibilityReport({ format: 'mp3', type: 'audio' });
+      const formatInfo = {
+        format: 'mp3',
+        type: 'audio' as const,
+        mimeType: 'audio/mpeg',
+        compressor: 'lamejs',
+        supportLevel: 'library' as const
+      };
+      const report = service.getCompatibilityReport(formatInfo);
 
       expect(report.formatSupport.isSupported).toBe(true);
       expect(report.formatSupport.primaryMethod).toBe('library'); // lamejs fallback
