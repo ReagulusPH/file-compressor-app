@@ -2,10 +2,28 @@ version: '3.8'
 
 services:
   file-compressor:
-    build: .
-    container_name: file-compressor-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: file-compressor
     restart: unless-stopped
     ports:
       - "3000:80"
     environment:
       - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.file-compressor.rule=Host(`filecompressor.konnektline.com`)"
+      - "traefik.http.services.file-compressor.loadbalancer.server.port=80"
+    networks:
+      - file-compressor-network
+
+networks:
+  file-compressor-network:
+    driver: bridge

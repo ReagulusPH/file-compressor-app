@@ -1,8 +1,17 @@
 # Deployment Guide
 
-## Quick Deploy
+## Quick Deploy Options
+
+### Option 1: Docker Compose (Recommended)
 ```bash
-# Make script executable and run
+# Using docker-compose
+chmod +x deploy-compose.sh
+./deploy-compose.sh
+```
+
+### Option 2: Direct Docker
+```bash
+# Using direct docker commands
 chmod +x deploy.sh
 ./deploy.sh
 ```
@@ -10,12 +19,23 @@ chmod +x deploy.sh
 ## Manual Steps
 
 ### 1. On Your LXC Container
+
+#### Docker Compose Method (Recommended)
 ```bash
 # Clone repo (if not done)
 git clone https://github.com/yourusername/your-repo.git
 cd your-repo
 
-# Deploy
+# Deploy with Docker Compose
+./deploy-compose.sh
+
+# Or manually:
+docker-compose up -d --build
+```
+
+#### Direct Docker Method
+```bash
+# Deploy with direct Docker
 ./deploy.sh
 ```
 
@@ -91,6 +111,28 @@ proxy_read_timeout 300;
 
 ## Monitoring Commands
 
+### Docker Compose Commands
+```bash
+# Check service status
+docker-compose ps
+
+# View real-time logs
+docker-compose logs -f
+
+# Check resource usage
+docker-compose top
+
+# Restart services
+docker-compose restart
+
+# Stop services
+docker-compose down
+
+# Stop and remove everything
+docker-compose down --volumes --remove-orphans
+```
+
+### Direct Docker Commands
 ```bash
 # Check container status
 docker ps | grep file-compressor
@@ -101,15 +143,38 @@ docker logs -f file-compressor
 # Check resource usage
 docker stats file-compressor
 
+# Restart container
+docker restart file-compressor
+
+# Stop container
+docker stop file-compressor
+```
+
+### Health Checks
+```bash
 # Test health endpoint
 curl http://localhost:3000/health
 
-# Restart container
-docker restart file-compressor
+# Check container health status
+docker inspect file-compressor | grep Health -A 10
 ```
 
 ## Update Process
 
+### Docker Compose Method
+```bash
+# Pull latest changes
+git pull
+
+# Redeploy with Docker Compose
+./deploy-compose.sh
+
+# Or manually:
+docker-compose down
+docker-compose up -d --build
+```
+
+### Direct Docker Method
 ```bash
 # Pull latest changes
 git pull
